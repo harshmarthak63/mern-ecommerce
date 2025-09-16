@@ -7,16 +7,40 @@ import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+
+// ✅ Allowed origins: local dev + deployed frontend
+const allowedOrigins = [
+  "http://localhost:5173", // Vite local dev
+  "https://mern-ecommerce-lncexwloz-harsh-marthaks-projects.vercel.app", // Vercel frontend URL
+];
+
+// ✅ Configure CORS
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like Postman) or from allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+// ✅ Parse JSON bodies
 app.use(express.json());
 
-// Connect DB
+// ✅ Connect to MongoDB
 connectDB();
 
-// Routes
+// ✅ Routes
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 
+// ✅ Root test route
 app.get("/", (req, res) => res.send("API is running"));
 
 const PORT = process.env.PORT || 5000;
