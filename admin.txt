@@ -1,7 +1,0 @@
-
-MongoDB atlas, admin creds
-
-
-QpX2mTli3xp8a9O5
-
-harshmarthak63_db_user
